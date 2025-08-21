@@ -1,32 +1,41 @@
 package config
 
-import (
-	"fmt"
+import "github.com/urfave/cli/v3"
 
-	"github.com/caarlos0/env/v11"
+const (
+	GithubPAT = "gh-pat"
 )
 
-type Config struct {
-	LogLevel string `env:"LOG_LEVEL" envDefault:"error"`
-
-	MetricsEnabled bool `env:"METRICS_ENABLED" envDefault:"true"`
-	MetricsPort    int  `env:"METRICS_PORT" envDefault:"8081"`
-
-	Local bool `env:"LOCAL" envDefault:"false"`
-
-	TracingEnabled    bool    `env:"TRACING_ENABLED" envDefault:"false"`
-	TracingSampleRate float64 `env:"TRACING_SAMPLERATE" envDefault:"0.01"`
-	TracingService    string  `env:"TRACING_SERVICE" envDefault:"katalog-agent"`
-	TracingVersion    string  `env:"TRACING_VERSION"`
-}
-
-func NewConfig() (*Config, error) {
-	var cfg Config
-
-	err := env.Parse(&cfg)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse config: %w", err)
+func Flags() []cli.Flag {
+	return []cli.Flag{
+		&cli.StringFlag{
+			Name:     "gh-pat",
+			Usage:    "GitHub Personal Access Token",
+			Sources:  cli.EnvVars("GH_PAT"),
+			Required: true,
+		},
+		&cli.StringFlag{
+			Name:     "org",
+			Usage:    "GitHub organization or user name",
+			Required: true,
+		},
+		&cli.StringFlag{
+			Name:     "forgejo-url",
+			Usage:    "Forgejo instance URL",
+			Sources:  cli.EnvVars("FORGEJO_URL"),
+			Required: true,
+		},
+		&cli.StringFlag{
+			Name:     "forgejo-token",
+			Usage:    "Forgejo access token",
+			Sources:  cli.EnvVars("FORGEJO_TOKEN"),
+			Required: true,
+		},
+		&cli.StringFlag{
+			Name:     "forgejo-user",
+			Usage:    "Forgejo username or organization",
+			Sources:  cli.EnvVars("FORGEJO_USER"),
+			Required: true,
+		},
 	}
-
-	return &cfg, nil
 }
