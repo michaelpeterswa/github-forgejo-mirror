@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/michaelpeterswa/github-forgejo-mirror/internal/config"
@@ -20,5 +21,9 @@ func main() {
 		},
 	}
 
-	app.Run(context.Background(), os.Args)
+	err := app.Run(context.Background(), os.Args)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
 }
